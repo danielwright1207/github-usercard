@@ -1,8 +1,29 @@
+import axios from "axios";
+console.log(axios);
+
 /*
   STEP 1: using axios, send a GET request to the following URL
     (replacing the placeholder with your Github name):
     https://api.github.com/users/<your name>
 */
+
+//axios
+// .get(datayouneed)
+//   .then(res => {
+//     select element on the DOM with querySelector
+//     appendchild to selected element using your function
+// })
+
+axios
+  .get(`https:api.github.com/users/danielwright1207`)
+  .then((res) => {
+    const cards = document.querySelector(".cards");
+    cards.appendChild(createCard(res));
+    console.log("do you see it?", res);
+  })
+  .catch((err) => {
+    console.log(err);
+  });
 
 /*
   STEP 2: Inspect and study the data coming back, this is YOUR
@@ -28,8 +49,19 @@
     user, and adding that card to the DOM.
 */
 
-const followersArray = [];
-
+const followersArray = [
+  "tetondan",
+  "dustinmyers",
+  "justsml",
+  "luishrd",
+  "bigknell",
+];
+followersArray.forEach((username) => {
+  axios.get(`https:api.github.com/users/${username}`).then((res) => {
+    const cards = document.querySelector(".cards");
+    cards.appendChild(createCard(res));
+  });
+});
 /*
   STEP 3: Create a function that accepts a single object as its only argument.
     Using DOM methods and properties, create and return the following markup:
@@ -49,6 +81,76 @@ const followersArray = [];
       </div>
     </div>
 */
+
+function createCard(obj) {
+  const container = document.createElement("div");
+  const image = document.createElement("img");
+  const cardInfo = document.createElement("div");
+  const name = document.createElement("h3");
+  const username = document.createElement("p");
+
+  const location = document.createElement("p");
+  const followers = document.createElement("p");
+  const following = document.createElement("p");
+  const bio = document.createElement("p");
+
+  image.src = obj.data.avatar_url;
+  name.textContent = ` Name: ${obj.data.name}`;
+  username.textContent = `Username ${obj.data.login}`;
+  location.textContent = `location: ${obj.data.location}`;
+
+  const profile = document.createElement("p");
+  profile.textContent = `Profile: `;
+  let profileLink = document.createElement("a");
+  profileLink.setAttribute("href", obj.data.html_url);
+  profileLink.innerHTML = obj.data.html_url;
+  profile.appendChild(profileLink);
+
+  followers.textContent = `Followers: ${obj.data.followers}`;
+  following.textContent = `Following: ${obj.data.following}`;
+  bio.textContent = `Bio: ${obj.data.bio}`;
+
+  container.classList.add("card");
+  cardInfo.classList.add("card-info");
+  name.classList.add("name");
+  username.classList.add("username");
+
+  container.appendChild(image);
+  container.appendChild(cardInfo);
+  cardInfo.appendChild(name);
+  cardInfo.appendChild(username);
+  cardInfo.appendChild(location);
+  cardInfo.appendChild(profile);
+  cardInfo.appendChild(followers);
+  cardInfo.appendChild(following);
+  cardInfo.appendChild(bio);
+
+  return container;
+}
+
+// // HERE IS WHERE WE CHANGE THE REAL PHYSICAL DOM
+
+//THIS IS ANOTHER WAY
+//   [image, cardInfo].forEach(el) {
+//     container.appendChild(el)
+//   }
+
+//   [name, username, location, profile, followers, following, bio].forEach(el) {
+//     cardInfo.appendChild(el)
+//   }
+
+// OF DOING THIS
+//   container.appendChild(image);
+//   container.appendChild(cardInfo);
+//   cardInfo.appendChild(name);
+//   cardInfo.appendChild(username);
+//   cardInfo.appendChild(location);
+//   cardInfo.appendChild(profile);
+//   cardInfo.appendChild(followers);
+//   cardInfo.appendChild(following);
+//   cardInfo.appendChild(bio);
+
+// }
 
 /*
   List of LS Instructors Github username's:
